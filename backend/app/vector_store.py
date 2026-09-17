@@ -146,17 +146,18 @@ class VectorStore:
     ) -> Dict[str, Any]:
 
         return {
-            "id": f"{file_path.stem}_chunk_{chunk_idx}",
-            "document_id": filename,
-            "title": title,
-            "category": category,
-            "text": (
-                f"Document: {title}\n"
-                f"Category: {category}\n\n"
-                f"{text}"
-            ),
-            "raw_snippet": text[:280]
-        }
+    "id": f"{file_path.stem}_chunk_{chunk_idx}",
+    "document_id": filename,
+    "title": title,
+    "category": category,
+    "text": (
+        f"Document: {title}\n"
+        f"Category: {category}\n\n"
+        f"{text}"
+    ),
+    "snippet": text[:280],
+    "raw_snippet": text[:280]
+}
 
     def ingest_knowledge_base(self, force_reload: bool = False) -> int:
         """
