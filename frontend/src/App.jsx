@@ -8,6 +8,7 @@ import MessageItem from './components/MessageItem';
 import InputBar from './components/InputBar';
 import SourceModal from './components/SourceModal';
 import { BookOpen, X, Sparkles, Sprout, ShieldCheck } from 'lucide-react';
+const API_URL = 'https://intellix-2xac.onrender.com';
 
 const WELCOME_GREETINGS = {
   ta: (name, crop) =>
@@ -120,8 +121,8 @@ export default function App() {
   const fetchHealthAndDocs = async () => {
     try {
       const [healthRes, docsRes] = await Promise.all([
-        fetch('/api/health'),
-        fetch('/api/documents')
+        fetch(`${API_URL}/api/health`),
+        fetch(`${API_URL}/api/documents`)
       ]);
       if (healthRes.ok) {
         const healthData = await healthRes.json();
@@ -181,7 +182,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/query', {
+      const response = await fetch(`${API_URL}/api/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -195,7 +196,7 @@ export default function App() {
       }
 
       const data = await response.json();
-      
+
       const assistantMsg = {
         id: 'bot-' + Date.now(),
         sender: 'assistant',
@@ -264,10 +265,10 @@ export default function App() {
   // If farmer is not logged in, display the Multilingual Login / Onboarding screen
   if (!farmerUser) {
     return (
-      <LoginPage 
-        onLogin={handleLogin} 
-        theme={theme} 
-        onToggleTheme={toggleTheme} 
+      <LoginPage
+        onLogin={handleLogin}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     );
   }
@@ -275,8 +276,8 @@ export default function App() {
   return (
     <div className={`flex flex-col min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-[#fbf9f5] dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors duration-300`}>
       {/* Top Navigation */}
-      <Header 
-        systemHealth={systemHealth} 
+      <Header
+        systemHealth={systemHealth}
         farmerUser={farmerUser}
         onLogout={handleLogout}
         onClearChat={handleClearChat}
@@ -289,9 +290,9 @@ export default function App() {
       <main className="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 py-4 flex flex-col">
         {/* Controls Bar: Language Selector & Status */}
         <div className="flex items-center justify-between gap-2 mb-4">
-          <LanguageSelect 
-            selectedLang={selectedLang} 
-            onSelectLang={setSelectedLang} 
+          <LanguageSelect
+            selectedLang={selectedLang}
+            onSelectLang={setSelectedLang}
           />
 
           <div className="flex items-center space-x-2 text-xs text-stone-500 dark:text-stone-400 font-medium">
@@ -303,9 +304,9 @@ export default function App() {
 
         {/* Visual Crop Category Showcase & Quick Cards */}
         {messages.length <= 2 && (
-          <CropVisualCards 
-            activeLang={selectedLang} 
-            onSelectQuery={(q) => handleSendMessage(q, selectedLang)} 
+          <CropVisualCards
+            activeLang={selectedLang}
+            onSelectQuery={(q) => handleSendMessage(q, selectedLang)}
           />
         )}
 
@@ -319,10 +320,10 @@ export default function App() {
         {/* Chat Messages Stream */}
         <div className="flex-1 overflow-y-auto pb-4 space-y-2">
           {messages.map((msg) => (
-            <MessageItem 
-              key={msg.id} 
-              message={msg} 
-              onOpenSources={handleOpenSources} 
+            <MessageItem
+              key={msg.id}
+              message={msg}
+              onOpenSources={handleOpenSources}
             />
           ))}
 
@@ -350,17 +351,17 @@ export default function App() {
       </main>
 
       {/* Input Bar */}
-      <InputBar 
-        onSendMessage={handleSendMessage} 
-        isLoading={isLoading} 
-        currentLang={selectedLang} 
+      <InputBar
+        onSendMessage={handleSendMessage}
+        isLoading={isLoading}
+        currentLang={selectedLang}
       />
 
       {/* Source Verification Modal */}
-      <SourceModal 
-        isOpen={isSourceModalOpen} 
-        onClose={() => setIsSourceModalOpen(false)} 
-        sources={activeSources} 
+      <SourceModal
+        isOpen={isSourceModalOpen}
+        onClose={() => setIsSourceModalOpen(false)}
+        sources={activeSources}
       />
 
       {/* Ingested Knowledge Base Articles Browser Modal */}
